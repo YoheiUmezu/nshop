@@ -17,9 +17,10 @@ export const actions = {
 
         fireApp.database().ref('groups').push(payload)
         .then(() => {
-            commit('setBusy', false, {root: true}),
+            commit('setBusy', false, {root: true})
             commit('setJobDone', true, {root: true})
-            
+            // const error = { message: 'An error occured.!' }
+            // commit('setError', error, {root: true})
         })
         .catch(error => {
             commit('setBusy', false, {root: true}),

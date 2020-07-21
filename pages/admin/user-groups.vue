@@ -12,6 +12,15 @@
               <input class="input" type="text" v-model="name">
             </div>
           </div>
+
+          <!-- <transition name="slide" type="animation">
+            <div v-if="error" class="notification is-danger">
+              {{ error.message }}
+            </div>
+          </transition> -->
+
+          <error-bar :error="error"></error-bar> 
+
           <div class="field">
             <div class="control">
               <button type="submit" class="button is-primary" :class="{ 'is-loading': busy }" :disabled="busy">Create</button>
@@ -48,11 +57,16 @@
 </template>
 
 <script>
+  import ErrorBar from '@/components/ErrorBar'
+
   export default {
     data () {
       return {
         name: ''
       }
+    },
+    components: {
+      ErrorBar: ErrorBar
     },
     methods: {
       onSubmit () {
