@@ -39,9 +39,9 @@
               </tr>
             </thead>  
             <tbody>
-              <tr>
-                <th>1</th>
-                <td><a href="#">Administrator</a></td>
+              <tr v-for="(group, index) in groups" :key="index">
+                <th>{{ ++index }}</th>
+                <td><a href="#">{{ group.name }}</a></td>
                 <td><a href="#"><span class="icon has-text-danger"><i class="fa fa-lg fa-times-circle"></i></span></a></td>
               </tr>
               <tr>
@@ -59,6 +59,7 @@
 
 <script>
   import ErrorBar from '@/components/ErrorBar'
+  import { createNamespacedHelpers } from 'vuex'
 
   export default {
     data () {
@@ -68,6 +69,12 @@
     },
     components: {
       ErrorBar: ErrorBar
+    },
+    created() {
+      const loadedGroups = this.$store.getters['admin/groups']
+      if(loadedGroups.length === 0){
+        this.$store.dispatch('admin/getGroups')
+      }
     },
     methods: {
       onSubmit () {
@@ -90,6 +97,9 @@
       }
     },
     computed: {
+      groups () {
+        return this.$store.getters['admin/groups']
+      },
       error () {
         return this.$store.getters.error
       },

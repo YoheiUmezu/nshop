@@ -26,6 +26,15 @@ export const actions = {
             commit('setBusy', false, {root: true}),
             commit('setError', error, {root: true})
         })
+    },
+    getGroups ({commit}) {//表示する
+        fireApp.database().ref('groups').on('child_added',
+            snapshot => {
+                let item = snapshot.val()
+                item.key = snapshot.key
+                commit('loadGroups', item)
+            }
+        )
     }
 }
 
