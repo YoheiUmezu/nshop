@@ -41,6 +41,7 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    { src: '@/plugins/vee-validate', ssr: true }
   ],
   /*
   ** Auto import components

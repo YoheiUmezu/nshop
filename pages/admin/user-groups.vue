@@ -9,7 +9,8 @@
           <div class="field">
             <label class="label">New user group</label>
             <div class="control">
-              <input class="input" type="text" v-model="name">
+              <input class="input" type="text" name="name" v-model="name" v-validate="'required|min:4'" :class="{ 'is-danger': errors.has('name') }">
+              <p v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</p>
             </div>
           </div>
 
@@ -70,13 +71,21 @@
     },
     methods: {
       onSubmit () {
-        this.$store.dispatch('admin/createGroup', { name: this.name })
+        this.$validator.validateAll()
+          .then(result => {
+            if(result) {
+              this.$store.dispatch('admin/createGroup', { name: this.name })
+            }
+          })
       },
       jobsDone () {
         this.name = ''
-        this.removeErrors()
+        this.$nextTick(() => {
+          this.removeErrors()
+        })
       },
       removeErrors () {
+        this.$validator.reset()
         this.$store.commit('clearError')
       }
     },
