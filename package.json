@@ -13,7 +13,8 @@
     "cross-env": "^7.0.2",
     "firebase": "^7.16.1",
     "nuxt": "^2.13.0",
-    "vee-validate": "^2.2.15"
+    "vee-validate": "^2.2.15",
+    "vue-swal": "^1.0.0"
   },
   "devDependencies": {}
 }

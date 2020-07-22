@@ -7,7 +7,8 @@
         <div class="column is-one-third">
           <form @submit.prevent="onSubmit">
           <div class="field">
-            <label class="label">New user group</label>
+            <label class="label" v-if="!group">New user group</label>
+            <label class="label" v-else>Update user group</label>
             <div class="control">
               <input class="input" type="text" name="name" v-model="name" v-validate="'required|min:4'" :class="{ 'is-danger': errors.has('name') }">
               <p v-show="errors.has('name')" class="help is-danger">{{ errors.first('name') }}</p>
@@ -24,7 +25,8 @@
 
           <div class="field">
             <div class="control">
-              <button type="submit" class="button is-primary" :class="{ 'is-loading': busy }" :disabled="busy">Create</button>
+              <button type="submit" class="button is-primary" :class="{ 'is-loading': busy }" :disabled="busy">{{ !group ? 'Create' : 'Update'}}</button>
+              <button type="submit" style="margin-left: 10px;" class="button" @click="cancelUpdate()" v-if="group">Cancel</button>
             </div>                    
           </div>
           </form>
@@ -41,13 +43,8 @@
             <tbody>
               <tr v-for="(group, index) in groups" :key="index">
                 <th>{{ ++index }}</th>
-                <td><a href="#">{{ group.name }}</a></td>
-                <td><a href="#"><span class="icon has-text-danger"><i class="fa fa-lg fa-times-circle"></i></span></a></td>
-              </tr>
-              <tr>
-                <th>2</th>
-                <td><a href="#">Customer</a></td>
-                <td><a href="#"><span class="icon has-text-danger"><i class="fa fa-lg fa-times-circle"></i></span></a></td>
+                <td><a href="#" @click.prevent="selectGroup(group)">{{ group.name }}</a></td>
+                <td><a href="#" @click.prevent="removeGroup(group)"><span class="icon has-text-danger">x</span></a></td>
               </tr>
             </tbody>
           </table>
@@ -64,7 +61,8 @@
   export default {
     data () {
       return {
-        name: ''
+        name: '',
+        group: null
       }
     },
     components: {
@@ -81,12 +79,40 @@
         this.$validator.validateAll()
           .then(result => {
             if(result) {
-              this.$store.dispatch('admin/createGroup', { name: this.name })
+              if(!this.group) {
+                this.$store.dispatch('admin/createGroup', { name: this.name })
+              } else {
+                this.$store.dispatch('admin/updateGroup', { name: this.name, group: this.group })
+              }
+              
             }
           })
       },
+      selectGroup(group) {
+        this.group = group
+        this.name = group.name
+      },
+      cancelUpdate () {
+        this.group = null
+        this.name = ""
+        this.jobsDone
+      },
+      removeGroup (group) {
+        this.$swal({
+          title: "Delete the group?",
+          icon: 'warning',
+          buttons: true,
+          dangerMode: true
+        }).then(ok => {
+          if(ok) {
+            this.$store.dispatch('admin/removeGroup', { group: group })
+          }
+        })
+        
+      },
       jobsDone () {
-        this.name = ''
+        this.group = null
+        this.name = ""
         this.$nextTick(() => {
           this.removeErrors()
         })
@@ -115,6 +141,7 @@
         if(value) {
           this.$store.commit('setJobDone', false)
           this.jobsDone
+          this.name=""
         }
       }
     }

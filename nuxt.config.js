@@ -41,7 +41,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    { src: '@/plugins/vee-validate', ssr: true }
+    { src: '@/plugins/vee-validate', ssr: true },
+    { src: '@/plugins/vue-swal', ssr: true }
   ],
   /*
   ** Auto import components
