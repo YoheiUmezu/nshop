@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import 'firebase/firebase-auth'
 
 const config = require('../config')()
 const fireConfig = config.fireConfig
@@ -13,12 +14,14 @@ const fireConfig = config.fireConfig
 //     appId: "1:849695648530:web:da9db00c81031d070021cb"
 //   };
 
-  let fireApp
+  let fireApp, adminApp
 
   if(!fireApp && !firebase.apps.length) {
       fireApp = firebase.initializeApp(fireConfig)
+      adminApp = firebase.initializeApp(fireConfig, 'fireAdmin')
   } else {
       fireApp = firebase.app()
+      adminApp = firebase.app('fireAdmin')
   }
 
-  export default fireApp
+  export { fireApp, adminApp }

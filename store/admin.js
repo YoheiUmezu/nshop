@@ -1,4 +1,4 @@
-import fireApp from '@/plugins/firebase'
+import { fireApp, adminApp } from '@/plugins/firebase'
 
 export const state = () => ({
     groups: []

@@ -43,6 +43,8 @@ export default {
   plugins: [
     { src: '@/plugins/vee-validate', ssr: true },
     { src: '@/plugins/vue-swal', ssr: true }
+    // '@/plugins/vee-validate',
+    // '@/plugins/vue-swal'
   ],
   /*
   ** Auto import components

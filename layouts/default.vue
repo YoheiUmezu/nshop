@@ -47,8 +47,28 @@
           </div>
 
           <div class="navbar-end">   
-            <div class="navbar-item">
-              Hi, Guest
+
+            <div class="navbar-item has-dropdown is-hoverable" v-if="userLoggedIn">
+              <a class="navbar-item" >
+                  Log Out
+                </a>
+              <div class="nav-link is-active" href="#">
+                  Hi, {{ username }}
+              </div>
+              <div class="navbar-dropdown">
+                <router-link class="navbar-item" to="user-profile">
+                  Profile
+                </router-link>                      
+                <a class="navbar-item" to="user-pwd-change">
+                  Change password
+                </a>
+                <a class="navbar-item" @click="logOut">
+                  Log Out
+                </a>
+              </div>
+            </div>
+            <div class="navbar-item" v-else>
+              Hi, {{ username }}
             </div>       
             <div class="navbar-item">
               <div class="field is-grouped is-grouped-multiline">
@@ -61,7 +81,7 @@
                   </nuxt-link>
                 </p>
 
-                <p class="control">
+                <p class="control" v-if="!userLoggedIn">
                   <nuxt-link class="button is-primary" to="/login">  
                       <span class="icon is-small">
                           <i class="fa fa-unlock-alt"></i>
@@ -72,7 +92,7 @@
                   </nuxt-link>
                 </p>
 
-                <p class="control">
+                <p class="control" v-if="!userLoggedIn">
                   <nuxt-link class="button is-info" to="/signup">  
                     <span class="icon is-small">
                       <i class="fa fa-user-o"></i>
@@ -106,6 +126,42 @@
 
 <script>
   export default {
+    data () {
+      return {
+        username: 'Guest'
+      }
+    },
+    created () {
+      if(!this.userLoggedIn) {
+        this.$store.dispatch('setAuthStatus')
+      }
+    },
+    methods: {
+      logOut() {
+        this.$store.dispatch('logOut')
+        this.$router.push('/')
+      }
+    },
+    computed: {
+      userProfile() {
+        return this.$store.getters.user
+      },
+      userLoggedIn () {
+        return this.$store.getters.loginStatus
+      },
+      userIsAdmin () {
+        return this.$store.getters.userRole === 'admin'
+      }
+    },
+    watch: {
+      userProfile(value) {
+        if(value) {
+          this.username = value.name
+        } else {
+          this.username = 'Guest'
+        }
+      }
+    }
   }
 </script>
 

@@ -108,7 +108,6 @@
             this.$store.dispatch('admin/removeGroup', { group: group })
           }
         })
-        
       },
       jobsDone () {
         this.group = null
